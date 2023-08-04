@@ -7,6 +7,9 @@ package com.ecommerce.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +24,7 @@ import org.hibernate.annotations.GenericGenerator;
  */
 
 @Entity
+@Table(name ="detalles")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -31,12 +35,18 @@ public class DetalleOrden {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private Integer id;
+    private String id;
+    
     private String nombre;
     private Double cantidad;
     private Double precio;
     private Double total;
     
+    @OneToOne
+    private Orden orden;
+    
+    @ManyToOne
+    private Producto producto;
     
             
     

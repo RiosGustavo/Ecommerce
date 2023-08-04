@@ -4,9 +4,12 @@
  */
 package com.ecommerce.model;
 
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +23,7 @@ import org.hibernate.annotations.GenericGenerator;
  * @author User
  */
 @Entity
+@Table(name = "usuarios") /// para que ne la tabla tenga el nombre de usuarios
 @Getter
 @Setter
 @AllArgsConstructor
@@ -30,7 +34,7 @@ public class Usuario {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private Integer id;
+    private String id;
 
     private String nombre;
     private String email;
@@ -38,5 +42,13 @@ public class Usuario {
     private String telefono;
     private String tipo;
     private String password;
+    
+    
+    
+    @OneToMany(mappedBy = "usuario")  //// esta es la relacion JPA
+    private List<Producto> productos;
+    
+    @OneToMany(mappedBy = "usuario")  //// esta es la relacion JPA
+    private List<Orden> ordenes;
 
 }
