@@ -8,9 +8,11 @@ import com.ecommerce.model.Producto;
 import com.ecommerce.model.Usuario;
 
 import com.ecommerce.service.ProductoService;
+import java.util.ArrayList;
 import org.slf4j.*; //// con el * le decimos que importe todo lo que tiene este paquete 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +33,8 @@ public class ProductoController {
     
     //// con este medoto redireccionamos hacia la vista show
     @GetMapping("")
-    public String show(){
+    public String show(Model modelo){
+        modelo.addAttribute("productos", productoService.findAll());
         return "productos/show";
     }
     
@@ -47,6 +50,18 @@ public class ProductoController {
     public String save(Producto producto){
         LOGGER.info("Este es el objeto producto {}", producto );
         Usuario usuario = new Usuario();
+        
+        usuario.setId("1");
+        usuario.setNombre("");
+        usuario.setDireccion("");
+        usuario.setEmail("");
+        usuario.setPassword("");
+        usuario.setTelefono("");
+        usuario.setTipo("ADMIN");
+        usuario.setUsername("gusti");
+        usuario.setOrdenes(new ArrayList <>());
+        usuario.setProductos(new ArrayList <>());
+        
         producto.setUsuario(usuario);
         productoService.save(producto);
         return"redirect:/productos";

@@ -5,6 +5,7 @@
 package com.ecommerce.service;
 
 import com.ecommerce.model.Producto;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -23,4 +24,6 @@ public interface ProductoService {
     
     public void delete(String id);
     
+    /// creamos metrodo para listar productos
+    public List<Producto> findAll();
 }
