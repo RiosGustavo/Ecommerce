@@ -39,9 +39,12 @@ public class Producto {
     private String descripcion;
     private String imagen;
     private double precio;
-    private int cantidad;
+    private double cantidad;
     
     @ManyToOne
     private Usuario usuario;
+    
+    
+    
 
 }
