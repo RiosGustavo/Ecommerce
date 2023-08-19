@@ -7,6 +7,8 @@ package com.ecommerce.controller;
 import com.ecommerce.model.DetalleOrden;
 import com.ecommerce.model.Orden;
 import com.ecommerce.model.Producto;
+import com.ecommerce.model.Usuario;
+import com.ecommerce.service.IUsuarioService;
 import org.slf4j.Logger;
 import com.ecommerce.service.ProductoService;
 import java.util.ArrayList;
@@ -35,6 +37,9 @@ public class HomeController {
 
     @Autowired
     private ProductoService productoService;
+    
+    @Autowired
+    private IUsuarioService usuarioService;
 
     /// para almacenar los detalles de la orden
     List<DetalleOrden> detalles = new ArrayList<DetalleOrden>();
@@ -138,15 +143,26 @@ public class HomeController {
 
         return "usuario/carrito.html";
     }
-    
-    
+
     @GetMapping("/getCart")
-    public String getCart(Model modelo){
-        
+    public String getCart(Model modelo) {
+
         modelo.addAttribute("cart", detalles);
         modelo.addAttribute("orden", orden);
         return "/usuario/carrito";
+
+    }
+
+    @GetMapping("/order")
+    public String order(Model modelo) {
         
+        /// temporalmente le pasamos un id 
+        Usuario usuario = usuarioService.findById("1").get();
+
+        modelo.addAttribute("cart", detalles);
+        modelo.addAttribute("orden", orden);
+        modelo.addAttribute("usuario", usuario);
+        return "usuario/resumenorden";
     }
 
 }
