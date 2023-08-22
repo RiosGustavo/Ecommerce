@@ -8,10 +8,13 @@ import com.ecommerce.model.DetalleOrden;
 import com.ecommerce.model.Orden;
 import com.ecommerce.model.Producto;
 import com.ecommerce.model.Usuario;
+import com.ecommerce.service.IDetalleOrdenService;
+import com.ecommerce.service.IOrdenService;
 import com.ecommerce.service.IUsuarioService;
 import org.slf4j.Logger;
 import com.ecommerce.service.ProductoService;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.LoggerFactory;
@@ -37,9 +40,15 @@ public class HomeController {
 
     @Autowired
     private ProductoService productoService;
-    
+
     @Autowired
     private IUsuarioService usuarioService;
+
+    @Autowired
+    private IOrdenService ordenService;
+
+    @Autowired
+    private IDetalleOrdenService detalleOrdenService;
 
     /// para almacenar los detalles de la orden
     List<DetalleOrden> detalles = new ArrayList<DetalleOrden>();
@@ -155,7 +164,7 @@ public class HomeController {
 
     @GetMapping("/order")
     public String order(Model modelo) {
-        
+
         /// temporalmente le pasamos un id 
         Usuario usuario = usuarioService.findById("1").get();
 
@@ -164,5 +173,36 @@ public class HomeController {
         modelo.addAttribute("usuario", usuario);
         return "usuario/resumenorden";
     }
+    
+    ///GUARDAR LA ORDEN 
+    @GetMapping("/saveOrder")
+    public String saveOrder(){
+        ///creamos una variable Date para que nos guarde la fecha de cuando sse  hiso la compra
+        Date fechaCreacion = new Date();
+        orden.setFechaCreacion(fechaCreacion);
+        orden.setNumero(ordenService.generarNumeroOrden()); // aca utilizamos elmetodo implentado
+                                                            /// en el servicio de la orden para generarle un numero 
+        /// ahora agregamos el usuario de esa orden
+        
+         Usuario usuario = usuarioService.findById("1").get();
+        
+         orden.setUsuario(usuario);
+         
+         ordenService.save(orden);
+         
+         /// guardar detalles de la orden
+         /// con el for vamos trallendo los detalles y se los vamos agregando a la orden
+         for(DetalleOrden dt:detalles){
+             dt.setOrden(orden);
+             detalleOrdenService.save(dt);
+         }
+         
+         ///limpiezade lista y orden para que si el usuario ingera nuevos proudctos no se añadas lo que ya se habian añadido previamente
+         orden = new Orden();
+         detalles.clear();
+         
+       return"redirect:/" ;
+    }
+    
 
 }

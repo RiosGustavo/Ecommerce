@@ -5,6 +5,7 @@
 package com.ecommerce.service;
 
 import com.ecommerce.model.Orden;
+import java.util.List;
 
 /**
  *
@@ -12,5 +13,9 @@ import com.ecommerce.model.Orden;
  */
 public interface IOrdenService {
     public Orden save (Orden orden);
+    
+    List<Orden> findAll();
+    
+    public String generarNumeroOrden();
     
 }
