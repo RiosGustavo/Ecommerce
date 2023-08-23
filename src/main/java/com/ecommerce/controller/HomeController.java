@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -204,5 +205,12 @@ public class HomeController {
        return"redirect:/" ;
     }
     
+    @PostMapping("/search")
+    public String searchProduct(@RequestParam String nombre, Model modelo){
+        log.info("Nombre del producto: {}", nombre );
+        List<Producto> productos = productoService.findAll().stream().filter(p -> p.getNombre().contains(nombre)).collect(Collectors.toList()); /// aca con el filter vamos a filtrar por el parametro nombre 
+        modelo.addAttribute("productos", productos);
+        return "usuario/home";                                                                                      /// con el colletors.list lo convertirmos a lista                                
+    }
 
 }
