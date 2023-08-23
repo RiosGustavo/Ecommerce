@@ -13,5 +13,6 @@ import java.util.Optional;
  */
 public interface IUsuarioService {
     Optional<Usuario> findById(String id);
+    Usuario save (Usuario usuario);
     
 }
