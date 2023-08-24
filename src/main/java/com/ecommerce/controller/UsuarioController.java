@@ -6,6 +6,8 @@ package com.ecommerce.controller;
 
 import com.ecommerce.model.Usuario;
 import com.ecommerce.service.IUsuarioService;
+import java.util.Optional;
+import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,28 @@ public class UsuarioController {
         return "redirect:/";
     }
     
+    @GetMapping("/login")
+    public String login(){
+        return "usuario/login";
+    }
     
+    @PostMapping("/acceder")
+    public String acceder(Usuario usuario, HttpSession session){
+       // logger.info("Accesos : {}", usuario);
+        
+        Optional<Usuario>  user = usuarioService.findByEmail(usuario.getEmail());
+        logger.info("Usuario de db: {}", user.get()); /// aca veridficamos en la consola cual es el usuario obtenido 
+        
+        if(user.isPresent()){
+            session.setAttribute("idUsuario", user.get().getId());
+            if (user.get().getTipo().equals("ADMIN")) {
+                return "redirect:/administrador";
+            }else{
+                return "redirect:/";
+            }
+        }
+        
+        return "redirect:/";
+    }
     
 }
