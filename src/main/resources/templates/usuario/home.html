@@ -22,10 +22,14 @@
     <body>
 
         <!-- Navigation -->
+        <!--ahora con un th:if evaluamos si usuario esta logueado para determinara cual vista le mostramos-->
         
-        <div th:include="usuario/template_usuario.html::header">
+        <div th:include="usuario/template_usuario.html::header" th:if="${sesion == null}">
             
         </div>
+        
+           <div th:include="usuario/template_usuario.html::header-user" th:unless="${sesion == null}">  </div>        
+        
 
         <!-- Page Content -->
         <div class="container">

@@ -6,12 +6,15 @@ package com.ecommerce.controller;
 
 import com.ecommerce.model.Producto;
 import com.ecommerce.model.Usuario;
+import com.ecommerce.service.IUsuarioService;
 
 import com.ecommerce.service.ProductoService;
 import com.ecommerce.service.UploadFileService;
+import com.ecommerce.service.UsuarioServiceImpl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
+import javax.servlet.http.HttpSession;
 import org.slf4j.*; //// con el * le decimos que importe todo lo que tiene este paquete 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,6 +43,9 @@ public class ProductoController {
 
     @Autowired
     private UploadFileService uploadFileService;
+    
+    @Autowired
+    private IUsuarioService usuarioService;
 
     //// con este medoto redireccionamos hacia la vista show
     @GetMapping("")
@@ -55,20 +61,12 @@ public class ProductoController {
     }
 
     @PostMapping("/save")                   //// del campo del formulario create traemos el name= img
-    public String save(Producto producto, @RequestParam("img") MultipartFile file) throws IOException {
+    public String save(Producto producto, @RequestParam("img") MultipartFile file, HttpSession session) throws IOException {
         LOGGER.info("Este es el objeto producto {}", producto);
-        Usuario usuario = new Usuario();
-
-        usuario.setId("1");
-        usuario.setNombre("");
-        usuario.setDireccion("");
-        usuario.setEmail("");
-        usuario.setPassword("");
-        usuario.setTelefono("");
-        usuario.setTipo("ADMIN");
-        usuario.setUsername("gusti");
-        usuario.setOrdenes(new ArrayList<>());
-        usuario.setProductos(new ArrayList<>());
+        
+        Usuario usuario = usuarioService.findById((String) session.getAttribute("idUsuario")).get();
+        
+      
 
         producto.setUsuario(usuario);
 

@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpSession;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,13 +59,23 @@ public class HomeController {
     Orden orden = new Orden();
 
     @GetMapping("")
-    public String home(Model modelo) {
+    public String home(Model modelo, HttpSession session) {
+        
+        log.info("session del usuario {}", session.getAttribute("idUsuario"));
 
         modelo.addAttribute("productos", productoService.findAll());
+        
+        /// aca determinamos si el usuario esta logueado o no y segun esto lo redirigimos a una pagina o a otra
+        
+        //session
+        modelo.addAttribute("sesion", session.getAttribute("idUsuario"));
 
         return "usuario/home";
 
     }
+    
+    
+    
     //// con este metodo mostramos el producto en la pagina
 
     @GetMapping("productohome/{id}")
@@ -155,19 +166,23 @@ public class HomeController {
     }
 
     @GetMapping("/getCart")
-    public String getCart(Model modelo) {
+    public String getCart(Model modelo, HttpSession session) {
 
         modelo.addAttribute("cart", detalles);
         modelo.addAttribute("orden", orden);
+        
+        //sesion
+        modelo.addAttribute("sesion", session.getAttribute("idUsuario"));
+        
         return "/usuario/carrito";
 
     }
 
     @GetMapping("/order")
-    public String order(Model modelo) {
+    public String order(Model modelo, HttpSession session) {
 
         /// temporalmente le pasamos un id 
-        Usuario usuario = usuarioService.findById("1").get();
+        Usuario usuario = usuarioService.findById((String) session.getAttribute("idUsuario")).get();
 
         modelo.addAttribute("cart", detalles);
         modelo.addAttribute("orden", orden);
@@ -177,7 +192,7 @@ public class HomeController {
     
     ///GUARDAR LA ORDEN 
     @GetMapping("/saveOrder")
-    public String saveOrder(){
+    public String saveOrder(HttpSession session){
         ///creamos una variable Date para que nos guarde la fecha de cuando sse  hiso la compra
         Date fechaCreacion = new Date();
         orden.setFechaCreacion(fechaCreacion);
@@ -185,7 +200,7 @@ public class HomeController {
                                                             /// en el servicio de la orden para generarle un numero 
         /// ahora agregamos el usuario de esa orden
         
-         Usuario usuario = usuarioService.findById("1").get();
+          Usuario usuario = usuarioService.findById((String) session.getAttribute("idUsuario")).get();
         
          orden.setUsuario(usuario);
          
