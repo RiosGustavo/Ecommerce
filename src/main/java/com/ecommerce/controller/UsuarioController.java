@@ -4,14 +4,18 @@
  */
 package com.ecommerce.controller;
 
+import com.ecommerce.model.Orden;
 import com.ecommerce.model.Usuario;
+import com.ecommerce.service.IOrdenService;
 import com.ecommerce.service.IUsuarioService;
+import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +34,9 @@ public class UsuarioController {
     
     @Autowired
     private IUsuarioService usuarioService;
+    
+    @Autowired
+    private IOrdenService ordenService;
     
     // /usuario/registro
     
@@ -72,6 +79,21 @@ public class UsuarioController {
         }
         
         return "redirect:/";
+    }
+    
+    @GetMapping("/compras")
+    public String obtenerCompras(Model modelo, HttpSession session){
+        
+        modelo.addAttribute("sesion", session.getAttribute("idUsuario"));
+        
+        Usuario usuario = usuarioService.findById(session.getAttribute("idUsuario").toString()).get();
+        
+        List<Orden> ordenes = ordenService.findByUsuario(usuario);
+        
+        modelo.addAttribute("ordenes", ordenes);
+        
+        return "usuario/compras";
+        
     }
     
 }

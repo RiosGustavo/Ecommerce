@@ -5,6 +5,7 @@
 package com.ecommerce.service;
 
 import com.ecommerce.model.Orden;
+import com.ecommerce.model.Usuario;
 import com.ecommerce.repository.IOrdenRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +71,11 @@ public class OrdenServiceImpl implements IOrdenService{
         
         
         return numeroConcatenado;
+    }
+
+    @Override
+    public List<Orden> findByUsuario(Usuario usuario) {
+        return ordenRepository.findByUsuario(usuario);
     }
     
 }

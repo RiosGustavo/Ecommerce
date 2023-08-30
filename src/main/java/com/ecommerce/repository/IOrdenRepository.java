@@ -5,6 +5,8 @@
 package com.ecommerce.repository;
 
 import com.ecommerce.model.Orden;
+import com.ecommerce.model.Usuario;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +16,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IOrdenRepository  extends JpaRepository<Orden, String >{
+    
+    public List<Orden> findByUsuario (Usuario usuario);
     
 }
