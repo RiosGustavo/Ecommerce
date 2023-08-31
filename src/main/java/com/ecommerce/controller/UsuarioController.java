@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -27,27 +28,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/usuario")
 public class UsuarioController {
-    
+
     //// creamos una variable logger para controlar errores
-    
-    private final Logger logger =LoggerFactory.getLogger(UsuarioController.class);
+    private final Logger logger = LoggerFactory.getLogger(UsuarioController.class);
     
     @Autowired
     private IUsuarioService usuarioService;
     
     @Autowired
     private IOrdenService ordenService;
-    
+
     // /usuario/registro
-    
     @GetMapping("/registro")
-    public String create(){
+    public String create() {
         
         return "usuario/registro";
     }
     
     @PostMapping("/save")
-    public String save(Usuario usuario){
+    public String save(Usuario usuario) {
         logger.info("Usuario registro: {}", usuario);
         
         usuario.setTipo("USER");
@@ -58,22 +57,22 @@ public class UsuarioController {
     }
     
     @GetMapping("/login")
-    public String login(){
+    public String login() {
         return "usuario/login";
     }
     
     @PostMapping("/acceder")
-    public String acceder(Usuario usuario, HttpSession session){
-       // logger.info("Accesos : {}", usuario);
+    public String acceder(Usuario usuario, HttpSession session) {
+        // logger.info("Accesos : {}", usuario);
         
-        Optional<Usuario>  user = usuarioService.findByEmail(usuario.getEmail());
+        Optional<Usuario> user = usuarioService.findByEmail(usuario.getEmail());
         logger.info("Usuario de db: {}", user.get()); /// aca veridficamos en la consola cual es el usuario obtenido 
         
-        if(user.isPresent()){
+        if (user.isPresent()) {
             session.setAttribute("idUsuario", user.get().getId());
             if (user.get().getTipo().equals("ADMIN")) {
                 return "redirect:/administrador";
-            }else{
+            } else {
                 return "redirect:/";
             }
         }
@@ -82,7 +81,7 @@ public class UsuarioController {
     }
     
     @GetMapping("/compras")
-    public String obtenerCompras(Model modelo, HttpSession session){
+    public String obtenerCompras(Model modelo, HttpSession session) {
         
         modelo.addAttribute("sesion", session.getAttribute("idUsuario"));
         
@@ -96,4 +95,14 @@ public class UsuarioController {
         
     }
     
+    @GetMapping("/detalle/{id}")
+    public String detalleCompra(@PathVariable String id, HttpSession session, Model modelo) {
+        logger.info("id de la orden: {}", id);
+        Optional<Orden> orden = ordenService.findById(id);
+        
+       //session
+        modelo.addAttribute("sesion", session.getAttribute("idUsuario"));
+        modelo.addAttribute("detalles", orden.get().getDetalle());
+        return "usuario/detallecompra";
+    }
 }

@@ -7,6 +7,7 @@ package com.ecommerce.service;
 import com.ecommerce.model.Orden;
 import com.ecommerce.model.Usuario;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -21,5 +22,7 @@ public interface IOrdenService {
     public String generarNumeroOrden();
 
     public List<Orden> findByUsuario(Usuario usuario);
+    
+    public Optional<Orden> findById(String id);
 
 }
