@@ -5,6 +5,7 @@
 package com.ecommerce.service;
 
 import com.ecommerce.model.Usuario;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -12,8 +13,9 @@ import java.util.Optional;
  * @author User
  */
 public interface IUsuarioService {
-    Optional<Usuario> findById(String id);
-    Usuario save (Usuario usuario);
-    Optional<Usuario> findByEmail(String email);
+   public Optional<Usuario> findById(String id);
+   public Usuario save (Usuario usuario);
+   public  Optional<Usuario> findByEmail(String email);
+   public  List<Usuario> findAll();
     
 }
