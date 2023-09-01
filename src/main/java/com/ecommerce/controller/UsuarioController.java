@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +38,9 @@ public class UsuarioController {
     
     @Autowired
     private IOrdenService ordenService;
+    
+     
+    BCryptPasswordEncoder passEncode = new BCryptPasswordEncoder();
 
     // /usuario/registro
     @GetMapping("/registro")
@@ -51,6 +55,7 @@ public class UsuarioController {
         
         usuario.setTipo("USER");
         
+        usuario.setPassword(passEncode.encode(usuario.getPassword()));
         usuarioService.save(usuario);
         
         return "redirect:/";

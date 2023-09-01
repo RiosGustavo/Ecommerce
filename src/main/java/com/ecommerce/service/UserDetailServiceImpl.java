@@ -28,34 +28,27 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private IUsuarioService usuarioService;
 
     @Autowired
-    private BCryptPasswordEncoder bCrypt;  /// para encriptar el password
-
-    @Autowired
     HttpSession session;
 
     private Logger log = LoggerFactory.getLogger(UserDetailServiceImpl.class);
 
+    public BCryptPasswordEncoder getBCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        
         log.info("Este es el username");
-        
         Optional<Usuario> optionalUser = usuarioService.findByEmail(username);
-
         if (optionalUser.isPresent()) {
-            
-            log.info("Esto es el id del usuraio: {}", optionalUser.get().getId());
-
-            session.setAttribute("idUsuario", optionalUser.get().getId());
-
+            log.info("Esto es el id del usuario: {}", optionalUser.get().getId());
+            session.setAttribute("idusuario", optionalUser.get().getId());
             Usuario usuario = optionalUser.get();
-
+            BCryptPasswordEncoder bCrypt = getBCryptPasswordEncoder();
             return User.builder().username(usuario.getNombre()).password(bCrypt.encode(usuario.getPassword())).roles(usuario.getTipo()).build();
-
         } else {
-            throw new UsernameNotFoundException("Usuario no Encontrado");
+            throw new UsernameNotFoundException("Usuario no encontrado");
         }
-
     }
 
 }
