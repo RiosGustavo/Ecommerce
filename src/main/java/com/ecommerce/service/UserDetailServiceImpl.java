@@ -45,7 +45,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
             session.setAttribute("idusuario", optionalUser.get().getId());
             Usuario usuario = optionalUser.get();
             BCryptPasswordEncoder bCrypt = getBCryptPasswordEncoder();
-            return User.builder().username(usuario.getNombre()).password(bCrypt.encode(usuario.getPassword())).roles(usuario.getTipo()).build();
+            return User.builder().username(usuario.getNombre()).password(usuario.getPassword()).roles(usuario.getTipo()).build();
         } else {
             throw new UsernameNotFoundException("Usuario no encontrado");
         }
